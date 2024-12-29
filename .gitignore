@@ -1,0 +1,22 @@
+# Archivos y carpetas generados por Ruby y Bundler
+*.gem
+*.rbc
+.bundle/
+vendor/
+log/
+
+# Archivos temporales y cachés
+*.lock
+*.tmp
+*.swp
+*.bak
+*.swo
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de la base de datos
+database/request_logs.db
+
+
