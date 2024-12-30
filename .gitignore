@@ -17,6 +17,7 @@ log/
 Thumbs.db
 
 # Archivos de la base de datos
-database/request_logs.db
+database/request_logs_get.db
+database/request_logs_post.db
 
 
