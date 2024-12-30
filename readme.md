@@ -18,41 +18,40 @@ Before starting, ensure you have the following installed on your machine:
 - **SQLite3** (database).
 
 Verify the installed versions by running:
-```bash
+```
 ruby -v
 bundler -v
 sqlite3 --version
 ```
 
----
 
 ## Installation
 
 1. **Clone this repository:**
-   ```bash
+   ```
    git clone <REPOSITORY_URL>
    cd qa-challenge
    ```
 
 2. **Install project dependencies:**
-   ```bash
+   ```
    bundle install
    ```
 
 3. **Initialize the SQLite3 database for GET and POST requests:**
    Run the `schema.sql` file to create the necessary tables:
-   ```bash
+   ```
    sqlite3 database/request_logs_get.db < database/schema.sql
    sqlite3 database/request_logs_post.db < database/schema.sql
    ```
 
 4. **Verify the created tables:**
-   ```bash
+   ```
    sqlite3 database/request_logs_get.db
    .tables
    ```
    You should see the `request_logs_get` table.
-   ```bash
+   ```
    sqlite3 database/request_logs_post.db
    .tables
    ```
@@ -65,13 +64,13 @@ sqlite3 --version
 ### Monitoring GET Requests
 1. **Run the GET monitoring script:**
    This script will send GET requests to the endpoint every second and log the responses into the `request_logs_get.db` database.
-   ```bash
+   ```
    ruby scripts/monitor_get.rb
    ```
 
 2. **Check the logged data for GET requests:**
    To view the stored logs, run:
-   ```bash
+   ```
    sqlite3 database/request_logs_get.db
    SELECT * FROM request_logs_get;
    ```
@@ -79,13 +78,13 @@ sqlite3 --version
 ### Monitoring POST Requests
 1. **Run the POST monitoring script:**
    This script will send POST requests to the endpoint every second and log the responses into the `request_logs_post.db` database.
-   ```bash
+   ```
    ruby scripts/monitor_post.rb
    ```
 
 2. **Check the logged data for POST requests:**
    To view the stored logs, run:
-   ```bash
+   ```
    sqlite3 database/request_logs_post.db
    SELECT * FROM request_logs_post;
    ```
@@ -97,7 +96,7 @@ sqlite3 --version
 ### Calculating GET Request Uptime
 1. **Run the uptime calculation script for GET requests:**
    This script reads the `request_logs_get.db` database and calculates the uptime percentage for GET requests.
-   ```bash
+   ```
    ruby scripts/uptime_get.rb
    ```
 
@@ -111,7 +110,7 @@ sqlite3 --version
 ### Calculating POST Request Uptime
 1. **Run the uptime calculation script for POST requests:**
    This script reads the `request_logs_post.db` database and calculates the uptime percentage for POST requests.
-   ```bash
+   ```
    ruby scripts/uptime_post.rb
    ```
 
@@ -145,13 +144,13 @@ ruby clears_tables.rb
    ```
 
 2. **Run the POST monitoring script:**
-   ```bash
+   ```
    ruby scripts/monitor_post.rb
    ```
 
 3. **Analyze the results:**
    Query the `request_logs_post.db` database to check for specific response patterns:
-   ```bash
+   ```
    sqlite3 database/request_logs_post.db
    SELECT name_parameter, response_status, response_text FROM request_logs_post;
    ```
