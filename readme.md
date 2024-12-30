@@ -20,10 +20,7 @@ Verify the installed versions by running:
 
 ```
 ruby -v
-```
 bundler -v
-```
-```
 sqlite3 --version
 ```
 
@@ -32,8 +29,8 @@ sqlite3 --version
 1. **Clone this repository:**
   
    ```
-   git clone <REPOSITORY_URL>
-   cd qa-challenge
+   git clone https://github.com/NicoSalva/qa-challenge-silver.git
+   cd qa-challenge-silver
    ```
 
 2. **Install project dependencies:**
