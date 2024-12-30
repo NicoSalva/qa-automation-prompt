@@ -1,4 +1,3 @@
-```markdown
 # QA Automation Challenge: API Monitoring and Bug Detection
 
 This project continuously monitors a REST service to calculate its uptime and detect patterns in a bug related to the `name` parameter.
@@ -18,28 +17,34 @@ Before starting, ensure you have the following installed on your machine:
 - **SQLite3** (database).
 
 Verify the installed versions by running:
+
 ```
 ruby -v
+```
 bundler -v
+```
+```
 sqlite3 --version
 ```
-
 
 ## Installation
 
 1. **Clone this repository:**
+  
    ```
    git clone <REPOSITORY_URL>
    cd qa-challenge
    ```
 
 2. **Install project dependencies:**
+   
    ```
    bundle install
    ```
 
 3. **Initialize the SQLite3 database for GET and POST requests:**
    Run the `schema.sql` file to create the necessary tables:
+   
    ```
    sqlite3 database/request_logs_get.db < database/schema.sql
    sqlite3 database/request_logs_post.db < database/schema.sql
@@ -163,4 +168,3 @@ ruby clears_tables.rb
 - Include the `request_logs_get.db` and `request_logs_post.db` files when submitting your solution.
 - While the bug appears more evident in POST requests, both GET and POST analyses are supported.
 
-``` 
