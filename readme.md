@@ -1,17 +1,23 @@
 ```markdown
 # QA Automation Challenge: API Monitoring and Bug Detection
 
-Este proyecto realiza un monitoreo continuo de un servicio REST para calcular su uptime y detectar patrones en un bug relacionado con el parámetro `name`.
+This project continuously monitors a REST service to calculate its uptime and detect patterns in a bug related to the `name` parameter.
 
-## Requisitos
+## Introduction
 
-Antes de comenzar, asegúrate de tener instalado en tu máquina:
+This solution focuses on analyzing the POST requests, as they provide the most meaningful responses for identifying and understanding the bug. However, the project also supports monitoring GET requests, offering flexibility for additional analysis if required. Both GET and POST monitoring scripts log responses into separate SQLite3 databases for clarity and ease of use.
 
-- **Ruby** (versión 3.2.2 o superior).
-- **Bundler** (administrador de dependencias de Ruby).
-- **SQLite3** (base de datos).
+---
 
-Verifica las versiones instaladas ejecutando:
+## Requirements
+
+Before starting, ensure you have the following installed on your machine:
+
+- **Ruby** (version 3.2.2 or higher).
+- **Bundler** (Ruby dependency manager).
+- **SQLite3** (database).
+
+Verify the installed versions by running:
 ```bash
 ruby -v
 bundler -v
@@ -20,93 +26,142 @@ sqlite3 --version
 
 ---
 
-## Instalación
+## Installation
 
-1. **Clona este repositorio:**
+1. **Clone this repository:**
    ```bash
-   git clone <URL_DEL_REPOSITORIO>
+   git clone <REPOSITORY_URL>
    cd qa-challenge
    ```
 
-2. **Instala las dependencias del proyecto:**
+2. **Install project dependencies:**
    ```bash
    bundle install
    ```
 
-3. **Inicializa la base de datos SQLite3:**
-   Ejecuta el archivo `schema.sql` para crear las tablas necesarias:
+3. **Initialize the SQLite3 database for GET and POST requests:**
+   Run the `schema.sql` file to create the necessary tables:
    ```bash
-   sqlite3 database/request_logs.db < database/schema.sql
+   sqlite3 database/request_logs_get.db < database/schema.sql
+   sqlite3 database/request_logs_post.db < database/schema.sql
    ```
 
-4. **Verifica la tabla creada:**
+4. **Verify the created tables:**
    ```bash
-   sqlite3 database/request_logs.db
+   sqlite3 database/request_logs_get.db
    .tables
    ```
-   Deberías ver la tabla `request_logs`.
+   You should see the `request_logs_get` table.
+   ```bash
+   sqlite3 database/request_logs_post.db
+   .tables
+   ```
+   You should see the `request_logs_post` table.
 
 ---
 
-## Ejecución del monitoreo
+## Running the Monitoring Scripts
 
-1. **Ejecuta el script de monitoreo:**
-   Este script enviará solicitudes al endpoint cada segundo y registrará las respuestas en la base de datos.
+### Monitoring GET Requests
+1. **Run the GET monitoring script:**
+   This script will send GET requests to the endpoint every second and log the responses into the `request_logs_get.db` database.
    ```bash
-   ruby scripts/monitor.rb
+   ruby scripts/monitor_get.rb
    ```
 
-2. **Consulta los registros en la base de datos:**
-   Para ver los datos almacenados, ejecuta:
+2. **Check the logged data for GET requests:**
+   To view the stored logs, run:
    ```bash
-   sqlite3 database/request_logs.db
-   SELECT * FROM request_logs;
+   sqlite3 database/request_logs_get.db
+   SELECT * FROM request_logs_get;
+   ```
+
+### Monitoring POST Requests
+1. **Run the POST monitoring script:**
+   This script will send POST requests to the endpoint every second and log the responses into the `request_logs_post.db` database.
+   ```bash
+   ruby scripts/monitor_post.rb
+   ```
+
+2. **Check the logged data for POST requests:**
+   To view the stored logs, run:
+   ```bash
+   sqlite3 database/request_logs_post.db
+   SELECT * FROM request_logs_post;
    ```
 
 ---
 
-## Cálculo del uptime
+## Calculating Uptime
 
-1. **Ejecuta el script para calcular el uptime:**
-   Este script leerá los registros de la base de datos y calculará el porcentaje de tiempo en el que el servicio respondió correctamente (código 200).
+### Calculating GET Request Uptime
+1. **Run the uptime calculation script for GET requests:**
+   This script reads the `request_logs_get.db` database and calculates the uptime percentage for GET requests.
    ```bash
-   ruby scripts/calculate_uptime.rb
+   ruby scripts/uptime_get.rb
    ```
 
-2. **Salida esperada:**
-   El script imprimirá en la consola algo como:
+2. **Expected Output:**
    ```plaintext
-   Total de solicitudes: 100
-   Solicitudes exitosas: 80
-   Porcentaje de uptime: 80.0%
+   Total requests: 100
+   Successful requests: 80
+   Uptime percentage: 80.0%
+   ```
+
+### Calculating POST Request Uptime
+1. **Run the uptime calculation script for POST requests:**
+   This script reads the `request_logs_post.db` database and calculates the uptime percentage for POST requests.
+   ```bash
+   ruby scripts/uptime_post.rb
+   ```
+
+2. **Expected Output:**
+   ```plaintext
+   Total requests: 100
+   Successful requests: 70
+   Uptime percentage: 70.0%
    ```
 
 ---
 
-## Análisis del Bug
+## Resetting the Databases
 
-1. **Modifica el array de `test_names` en el script `monitor.rb`:**
-   Puedes incluir valores específicos para probar y detectar el patrón del bug.
+ **Clear both GET and POST databases:**
+   Run the script to clear all records from both `request_logs_get` and `request_logs_post` databases:
+```
+cd path/to/scripts
+ruby clears_tables.rb
+```
+
+---
+
+## Bug Analysis
+
+### Analyzing POST Requests
+1. **Modify `test_names` in `monitor_post.rb`:**
+   Update the `test_names` array to include specific values to test the bug patterns.
    ```ruby
    test_names = ["John", "Alice", "", "1234", "!@#$%", "中文测试"]
    ```
 
-2. **Ejecuta nuevamente el script de monitoreo:**
+2. **Run the POST monitoring script:**
    ```bash
-   ruby scripts/monitor.rb
+   ruby scripts/monitor_post.rb
    ```
 
-3. **Revisa los registros en la base de datos:**
+3. **Analyze the results:**
+   Query the `request_logs_post.db` database to check for specific response patterns:
    ```bash
-   sqlite3 database/request_logs.db
-   SELECT name_parameter, response_status, response_text FROM request_logs;
+   sqlite3 database/request_logs_post.db
+   SELECT name_parameter, response_status, response_text FROM request_logs_post;
    ```
 
 ---
 
-## Notas
+## Notes
 
-- El script de monitoreo debe ejecutarse durante al menos 10 minutos para obtener un cálculo preciso del uptime.
-- Incluye la base de datos `request_logs.db` al enviar tu solución.
+- The monitoring scripts should run for at least 10 minutes to obtain accurate uptime calculations.
+- Include the `request_logs_get.db` and `request_logs_post.db` files when submitting your solution.
+- While the bug appears more evident in POST requests, both GET and POST analyses are supported.
 
----
+``` 
